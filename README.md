@@ -19,7 +19,7 @@ Manual Hyperparameter Tuning was carried out, a few instances are as follows:
 
 ## Evaluation
 We splitted the data into three sets, 70% for train, ~19.35% for validation and ~10.64% for testing. We observed different metrics for classification.
-E.g. Precision, Recall, Accuracy, F-score etc.
+E.g. Precision, Recall, Accuracy, F1-score etc.
 
 ## Results
 ### Validation Set
@@ -38,7 +38,7 @@ E.g. Precision, Recall, Accuracy, F-score etc.
 | other     | 0.81      | 1.00   | 0.90     |
 | unchecked | 1.00      | 0.91   | 0.95     |
 
-**Validation Accuracy**: _0.93_, **Macro Average**: _0.92_
+**Test Accuracy**: _0.93_, **Macro Average**: _0.92_
 
 _Note: The code was run multiple times and each time the result produce was different, however all the results had similar metric values._
 

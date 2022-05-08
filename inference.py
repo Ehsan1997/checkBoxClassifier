@@ -2,7 +2,7 @@ import torch
 from torchvision.models import resnet18
 import argparse
 from PIL import Image
-from torchvision.transforms import ToTensor, Resize
+from torchvision.transforms import ToTensor, Resize, Normalize
 
 parser = argparse.ArgumentParser(description='Script to classify checkboxes.')
 parser.add_argument('-f', required=True, dest='file_path')
@@ -20,7 +20,8 @@ if __name__ == '__main__':
 
     class_list = ['checked', 'other', 'unchecked']
 
-    input_tensor = ToTensor()(Resize((224,224))(Image.open(args.file_path).convert('RGB'))).unsqueeze(0)
+    input_tensor = (ToTensor()(Resize((224,224))(Image.open(args.file_path).convert('RGB'))))
+    input_tensor = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(input_tensor).unsqueeze(0)
 
     with torch.inference_mode():
         print(class_list[torch.argmax(model(input_tensor)[0])])
