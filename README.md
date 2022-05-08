@@ -63,7 +63,7 @@ This code mainly consists of 2 files one for training and other for inference. B
     - model_weights/
       - pretrained_model.pt
 ```
-This misc folder is not present in the git repo and can be downloaded separately from google drive.
+This misc folder is not present in the git repo and can be downloaded separately from google drive. [Download this zip file](https://drive.google.com/file/d/1OAiKoBXROtcfWWnYmz_GSZdtYG6mBU0s/view?usp=sharing) and extract it on the root directory.
 
 These default paths can be overridden using commandline arguments.
 ### Training Script

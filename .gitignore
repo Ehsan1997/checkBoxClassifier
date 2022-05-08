@@ -1,1 +1,4 @@
-misc
+misc/
+resnet_18_weights.pt
+.idea/
+venv
