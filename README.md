@@ -15,7 +15,7 @@ Optimizer used is SGD with learning rate of 0.01 and momentum of 0.2. Loss used 
 Manual Hyperparameter Tuning was carried out, a few instances are as follows:
 1. **Deciding which layers to freeze**: Training all the layers in resnet 18 caused the model to be overparameterized for our problem and training only the last layer caused the model to be biased. Thus, we froze the entire network and only trained the last few layers.
 2. **Deciding momentum**: SGD is known to generalize better than Adam, but it's hard to tune. Thus, we tried high, low and medium values for it and finally found that 0.2 was optimum.
-3. **Deciding Input Image Size**: We tried 120x120 first and then 224x224. Later produced the best results.
+3. **Deciding Input Image Size**: We tried 120x120 first and then 224x224. Latter produced the best results.
 
 ## Evaluation
 We splitted the data into three sets, 70% for train, ~19.35% for validation and ~10.64% for testing. We observed different metrics for classification.
@@ -40,10 +40,10 @@ E.g. Precision, Recall, Accuracy, F1-score etc.
 
 **Test Accuracy**: _0.93_, **Macro Average**: _0.92_
 
-_Note: The code was run multiple times and each time the result produce was different, however all the results had similar metric values._
+_Note: The code was run multiple times and each time the result produced was different, however all the results had similar metric values._
 
 ## Running The Code
-This code mainly consists of 2 files one for training and other for inference. By default the scripts assume the following directory structure:
+This code mainly consists of 2 files, one for training and other for inference. By default, the scripts assume the following directory structure:
 ```shell
 - root/
   - misc/
@@ -63,9 +63,9 @@ This code mainly consists of 2 files one for training and other for inference. B
     - model_weights/
       - pretrained_model.pt
 ```
-This misc folder is not present in the git repo and can be downloaded separately from google drive. [Download this zip file](https://drive.google.com/file/d/1OAiKoBXROtcfWWnYmz_GSZdtYG6mBU0s/view?usp=sharing) and extract it on the root directory of your project workspace.
+This misc folder is not present in the git repo and can be downloaded separately from Google Drive. [Download this zip file](https://drive.google.com/file/d/1OAiKoBXROtcfWWnYmz_GSZdtYG6mBU0s/view?usp=sharing) and extract it on the root directory of your project workspace.
 
-These default paths can be overridden using commandline arguments.
+These default paths can be overridden using the commandline arguments.
 ### Training Script
 This script takes in the path of the dataset directory and trains a model on it. Finally, the new weights of the model are saved to the given path and file name.
 ```shell
@@ -107,17 +107,17 @@ required:
 ```
 
 ### Running Training and Inference via Docker
-In order to train your model via docker, Dockerfile.train is provided. You can build and use it for training a model.
-Similarly for inference, Dockerfile.infer is also present. It is important to note that these files rely on disk mounting to produce relevant output.
+In order to train a new model via docker, Dockerfile.train is provided.
+Similarly, for inference, Dockerfile.infer is also present. It is important to note that these files rely on disk mounting to produce relevant output.
 
 #### Training via Docker
 By default, a CMD command at the end of train docker file is present that runs the training code and saves the model to `/app/docker_artifacts` directory.
-In order to train your model using docker, the default method is as follows:
-1. Create a directory in your host filesystem known as `docker_artifacts`.
-2. Make sure that your data is present in `misc/data` in your workspace, the docker file copies this directory into the image.
+In order to train a new model using docker, the default procedure is as follows:
+1. Create a directory in your host workspace known as `docker_artifacts`.
+2. Make sure that your data is present in `misc/data` within your workspace, the docker file copies this directory into the docker image.
 3. Build the docker image using `docker build -t image_name -f Dockerfile.train .`.
 4. Run the docker image after mounting the host's `docker_artifacts` directory: `docker run --name container_name -v ${PWD}/docker_artifacts:/app/docker_artifacts image_name`. `${PWD}` is for powershell, for bash use `pwd`.
-5. The last command will download the weights for pretrained resnet18 and train the model. Finally, the newly trained model will appear in `docker_artifacts` directory with the name `resnet18_model.pt`.
+5. The last command will download the weights for pretrained resnet18 and train the model. Finally, the newly trained model will appear in `docker_artifacts` directory with the name `resnet18_model.pt` in the host workspace.
 
 _Note: If you want to change the paths and filenames in the above mentioned steps, you will need to override the CMD command in the dockerfile by providing a new one at `docker run ...`_.
 
@@ -125,12 +125,12 @@ _Note: If you want to change the paths and filenames in the above mentioned step
 Inference follows a very similar pattern to training, however, it only requires 2 additional files: 1. Image to perform inference on, 2. Pretrained Model weights.
 Default Method:
 1. Ensure `docker_artifacts` consists of 2 files. 1. Image with the name `image.jpg`. 2. Model weights with the name `resnet18_model.pt`.
-2. Build image, similar to point 3 in training with docker.
-3. Run the image, again mount the `docker_artifacts` directory and you will see the output of the inference model.
-Similarly to training, if you override the CMD command, you'll no longer require to follow the directory structure mentioned above.
+2. Build the docker image, similar to point 3 in training with docker.
+3. Run the docker image, again mount the `docker_artifacts` directory, and you will see the output of the inference model on stdout.
+Similar to training, if you override the CMD command, you'll no longer be required to follow the directory structure mentioned above.
 
 #### Docker development file
-You can simply ignore this, this was made for the purpose of experimenting with docker, so that I can create training and inference dockerfiles.
+You can simply ignore `Dockerfile.dev`, this was made for the purpose of experimenting with docker, so that ew can create training and inference dockerfiles.
 
 ## Run Time Analysis and Optimization
 For training and inference, we used RTX 3090 GPU.
@@ -149,6 +149,6 @@ Time obtained for both cases was very similar, the `inference_mode` code perform
 3. **Average** Time taken per Image over 55 Images, **Inference Mode**: _0.036s_, **Normal Mode**: _0.039s_.
 
 ## Future Improvements
-1. This dataset only consists of ~500 images, thus techniques like Metric Learning can be used to improve the model performance.
+1. This dataset only consists of ~500 images, thus techniques like Metric Learning can be used to improve the model's performance.
 2. Automatic Hyperparameter tuning can help in achieving even better results.
 3. Quantization and Pruning can be applied to the Neural Network for better inference speed on commodity hardware (e.g. CPU).
