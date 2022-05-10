@@ -1,0 +1,5 @@
+README.md
+venv/
+resnet_18_weights.pt
+.idea/
+.gitignore

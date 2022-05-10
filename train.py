@@ -86,7 +86,6 @@ if __name__ == '__main__':
             y_pred.extend(torch.argmax(torch.softmax(pred, 1), 1).tolist())
             loss = criterion(pred, batch_labels)
             total_loss += loss.item()
-
         print()
         print(classification_report(y_true, y_pred, target_names=base_ds.classes))
         print(f"Val Loss: {total_loss/len(val_dl)}")

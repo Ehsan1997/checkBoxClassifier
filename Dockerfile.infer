@@ -1,0 +1,11 @@
+FROM pytorch/pytorch
+
+WORKDIR app
+
+COPY misc/model_weights misc/model_weights
+COPY requirements.txt requirements.txt
+COPY inference.py inference.py
+
+RUN pip install -r requirements.txt
+
+CMD ["python", "inference.py", "-f", "/app/docker_artifacts/image.jpg", "--model-path", "/app/docker_artifacts/resnet18_model.pt"]

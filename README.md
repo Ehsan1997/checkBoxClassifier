@@ -63,11 +63,11 @@ This code mainly consists of 2 files one for training and other for inference. B
     - model_weights/
       - pretrained_model.pt
 ```
-This misc folder is not present in the git repo and can be downloaded separately from google drive. [Download this zip file](https://drive.google.com/file/d/1OAiKoBXROtcfWWnYmz_GSZdtYG6mBU0s/view?usp=sharing) and extract it on the root directory.
+This misc folder is not present in the git repo and can be downloaded separately from google drive. [Download this zip file](https://drive.google.com/file/d/1OAiKoBXROtcfWWnYmz_GSZdtYG6mBU0s/view?usp=sharing) and extract it on the root directory of your project workspace.
 
 These default paths can be overridden using commandline arguments.
 ### Training Script
-This script takes in the path of the dataset directory and trains a model on them. Finally the new weights of the model and saved to the given path and file name.
+This script takes in the path of the dataset directory and trains a model on it. Finally, the new weights of the model are saved to the given path and file name.
 ```shell
 usage: train.py [-h] [-f MODEL_PATH] [-d DATA_PATH]
 
@@ -105,3 +105,29 @@ default:
 required:
   -f {Path to input Image}
 ```
+
+### Running Training and Inference via Docker
+In order to train your model via docker, Dockerfile.train is provided. You can build and use it for training a model.
+Similarly for inference, Dockerfile.infer is also present. It is important to note that these files rely on disk mounting to produce relevant output.
+
+#### Training via Docker
+By default, a CMD command at the end of train docker file is present that runs the training code and saves the model to `/app/docker_artifacts` directory.
+In order to train your model using docker, the default method is as follows:
+1. Create a directory in your host filesystem known as `docker_artifacts`.
+2. Make sure that your data is present in `misc/data` in your workspace, the docker file copies this directory into the image.
+3. Build the docker image using `docker build -t image_name -f Dockerfile.train .`.
+4. Run the docker image after mounting the host's `docker_artifacts` directory: `docker run --name container_name -v ${PWD}/docker_artifacts:/app/docker_artifacts image_name`. `${PWD}` is for powershell, for bash use `pwd`.
+5. The last command will download the weights for pretrained resnet18 and train the model. Finally, the newly trained model will appear in `docker_artifacts` directory with the name `resnet18_model.pt`.
+
+_Note: If you want to change the paths and filenames in the above mentioned steps, you will need to override the CMD command in the dockerfile by providing a new one at `docker run ...`_.
+
+#### Inference via Docker
+Inference follows a very similar pattern to training, however, it only requires 2 additional files: 1. Image to perform inference on, 2. Pretrained Model weights.
+Default Method:
+1. Ensure `docker_artifacts` consists of 2 files. 1. Image with the name `image.jpg`. 2. Model weights with the name `resnet18_model.pt`.
+2. Build image, similar to point 3 in training with docker.
+3. Run the image, again mount the `docker_artifacts` directory and you will see the output of the inference model.
+Similarly to training, if you override the CMD command, you'll no longer require to follow the directory structure mentioned above.
+
+#### Docker development file
+You can simply ignore this, this was made for the purpose of experimenting with docker, so that I can create training and inference dockerfiles.
