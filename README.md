@@ -131,3 +131,24 @@ Similarly to training, if you override the CMD command, you'll no longer require
 
 #### Docker development file
 You can simply ignore this, this was made for the purpose of experimenting with docker, so that I can create training and inference dockerfiles.
+
+## Run Time Analysis and Optimization
+For training and inference, we used RTX 3090 GPU.
+### Stats for Training
+We trained our model for 100 epochs, where we noted the time for each epoch. Over 100 runs we obtained the following values:
+1. **Minimum** Time taken for 1 Epoch: _0.79s_
+2. **Maximum** Time taken for 1 Epoch: _1.37s_
+3. **Average** Time taken per Epoch over 100 Epochs: _0.85s_
+Batch size of 32 was used and total number of train images were 360.
+
+### Stats for Inference
+For each image in the test set (55 images in total), we noted the time for inference in 2 different settings: (Pytorch's) Inference Mode and Normal mode (where graph for each computation is updated).
+Time obtained for both cases was very similar, the `inference_mode` code performed slightly better.
+1. **Minimum** Time taken for 1 Image, **Inference Mode**: _0.015s_, **Normal Mode**: _0.016s_.
+2. **Maximum** Time taken for 1 Image, **Inference Mode**: _0.076s_, **Normal Mode**: _0.077s_.
+3. **Average** Time taken per Image over 55 Images, **Inference Mode**: _0.036s_, **Normal Mode**: _0.039s_.
+
+## Future Improvements
+1. This dataset only consists of ~500 images, thus techniques like Metric Learning can be used to improve the model performance.
+2. Automatic Hyperparameter tuning can help in achieving even better results.
+3. Quantization and Pruning can be applied to the Neural Network for better inference speed on commodity hardware (e.g. CPU).
